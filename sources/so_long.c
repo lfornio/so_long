@@ -6,7 +6,7 @@
 /*   By: lfornio <lfornio@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/24 10:31:47 by lfornio           #+#    #+#             */
-/*   Updated: 2021/10/11 16:13:59 by lfornio          ###   ########.fr       */
+/*   Updated: 2021/10/12 16:16:30 by lfornio          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,26 +77,15 @@ int walls_perimeter(char **tab, int count) //функция проверяет �
 	return (0);
 }
 
-// void input_image_from_map(char *str)
-// {
-// 	int i = 0;
-
-// 	while (str[i])
-// 	{
-// 		if (str[i] == '1')
-
-// 	}
-// }
-
 void init_images(void *mlx_ptr, t_images *img)
 {
 	int width;
 	int height;
 
 	img->img_ptr_wall = mlx_xpm_file_to_image(mlx_ptr, "images/wall.xpm", &width, &height);
-	img->img_ptr_zone = mlx_xpm_file_to_image(mlx_ptr, "images/free_zone.xpm", &width, &height);
-	img->img_ptr_cat = mlx_xpm_file_to_image(mlx_ptr, "images/cat.xpm", &width, &height);
-	img->img_ptr_mouse = mlx_xpm_file_to_image(mlx_ptr, "images/mouse.xpm", &width, &height);
+	// img->img_ptr_zone = mlx_xpm_file_to_image(mlx_ptr, "images/free_zone.xpm", &width, &height);
+	img->img_ptr_cat = mlx_xpm_file_to_image(mlx_ptr, "images/player.xpm", &width, &height);
+	img->img_ptr_mouse = mlx_xpm_file_to_image(mlx_ptr, "images/cake.xpm", &width, &height);
 	img->img_ptr_exit = mlx_xpm_file_to_image(mlx_ptr, "images/exit.xpm", &width, &height);
 }
 
@@ -114,12 +103,12 @@ void map_print_img(void *mlx_ptr, void *win_ptr, t_images *img, char **tab)
 		{
 			if (tab[i][j] == '1')
 				mlx_put_image_to_window(mlx_ptr, win_ptr, img->img_ptr_wall, x, y);
-			else
-				mlx_put_image_to_window(mlx_ptr, win_ptr, img->img_ptr_zone, x, y);
-			x += 50;
+			// else
+			// 	mlx_put_image_to_window(mlx_ptr, win_ptr, img->img_ptr_zone, x, y);
+			x += 75;
 			j++;
 		}
-		y += 50;
+		y += 75;
 		i++;
 	}
 	i = 0;
@@ -137,10 +126,10 @@ void map_print_img(void *mlx_ptr, void *win_ptr, t_images *img, char **tab)
 			if (tab[i][j] == 'E')
 				mlx_put_image_to_window(mlx_ptr, win_ptr, img->img_ptr_exit, x, y);
 
-			x += 50;
+			x += 75;
 			j++;
 		}
-		y += 50;
+		y += 75;
 		i++;
 	}
 }
@@ -189,22 +178,26 @@ int error_str(char **tab, int count)
 
 int main(int argc, char **argv)
 {
+	t_mlx *mlx;
+	mlx = (t_mlx *)malloc(sizeof(t_mlx));
+	t_size *win;
+	win = (t_size *)malloc(sizeof(t_size));
 
-	void *mlx_ptr;
-	void *win_ptr;
+	// void *mlx_ptr;
+	// void *win_ptr;
+
 	char *line;
 	int res;
 	char **tab = NULL;
 	int count;
-	t_size *win;
-	win = (t_size *)malloc(sizeof(t_size));
+
 	int i = 0;
 
 	if (argc == 2)
 	{
 		int fd;
 		int a;
-		a = ft_strlen(argv[1]) - 1 - 3;
+		a = ft_strlen(argv[1]) - 4;
 		char *s;
 		s = argv[1];
 		char *str;
@@ -221,8 +214,7 @@ int main(int argc, char **argv)
 		str[i] = '\0';
 		if (ft_strncmp(str, ".ber", 4) != 0)
 		{
-			write(1, "Error\n", 6);
-			printf("The map is not .ber\n");
+			printf("Error: The map is not .ber\n");
 			free(str);
 			exit(0);
 		}
@@ -277,8 +269,8 @@ int main(int argc, char **argv)
 			printf("The perimeter walls are open\n");
 			exit(0);
 		}
-		win->height = 50 * i;
-		win->width = 50 * ft_strlen(tab[0]);
+		win->height = 75 * i;
+		win->width = 75 * ft_strlen(tab[0]);
 		printf("hei = %d\n", win->height);
 		printf("wid = %d\n", win->width);
 		if (error_str(tab, count) != 0)
@@ -287,13 +279,52 @@ int main(int argc, char **argv)
 	else
 		write(1, "Error\n", 6);
 
-	mlx_ptr = mlx_init();
+	mlx->mlx_ptr = mlx_init();
 
-	win_ptr = mlx_new_window(mlx_ptr, win->width, win->height, "so_long");
+	mlx->win_ptr = mlx_new_window(mlx->mlx_ptr, win->width, win->height, "so_long");
+
+	// img_data = (int *)mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
+	// while(i < 200)
+	// {
+	// 	int j = 0;
+	// 	while (j < 200)
+	// 	{
+	// 		if(j % 2)
+	// 			img_data[i * 200 + j] = 0xFFFFFF;
+	// 		else
+	// 			img_data[i * 200 + j] = 0xFF0000;
+	// 		j++;
+	// 	}
+	// 	i++;
+	// }
+	// mlx_put_image_to_window(mlx_ptr, win_ptr, img_ptr, 100, 100);
 	t_images *img;
+	int *img_data;
+	int bpp;
+	int size_line;
+	int endian;
 	img = (t_images *)malloc(sizeof(t_images));
-	init_images(mlx_ptr, img);
-	map_print_img(mlx_ptr, win_ptr, img, tab);
+	img->img_ptr = mlx_new_image(mlx->mlx_ptr, win->width, win->height);
+	img_data = (int *)mlx_get_data_addr(img->img_ptr, &bpp, &size_line, &endian);
+	i = 0;
+	while(i < win->height)
+	{
+		int j = 0;
+		while (j < win->width)
+		{
 
-	mlx_loop(mlx_ptr);
+			img_data[i * win->width + j] = 0x90EE90;
+
+			j++;
+		}
+		i++;
+	}
+	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, img->img_ptr, 0, 0);
+
+
+
+	init_images(mlx->mlx_ptr, img);
+	map_print_img(mlx->mlx_ptr, mlx->win_ptr, img, tab);
+
+	mlx_loop(mlx->mlx_ptr);
 }
