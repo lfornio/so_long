@@ -6,7 +6,7 @@
 /*   By: lfornio <lfornio@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 15:17:47 by lfornio           #+#    #+#             */
-/*   Updated: 2021/10/13 13:28:45 by lfornio          ###   ########.fr       */
+/*   Updated: 2021/10/13 15:05:27 by lfornio          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,13 +120,13 @@ int error_map(char **tab, int count)
 	return (flag);
 }
 
-void init_size_window(t_size *win, char *s, int count)
+void init_size_window(t_mlx *mlx, char *s, int count)
 {
-	win->height = 75 * count;
-	win->width = 75 * ft_strlen(s);
+	mlx->height = 75 * count;
+	mlx->width = 75 * ft_strlen(s);
 }
 
-void print_background(t_images *img, t_mlx *mlx, t_size *win)
+void print_background(t_mlx *mlx)
 {
 	int *img_data;
 	int bpp;
@@ -134,20 +134,20 @@ void print_background(t_images *img, t_mlx *mlx, t_size *win)
 	int endian;
 	int i;
 
-	img->img_ptr = mlx_new_image(mlx->mlx_ptr, win->width, win->height);
-	img_data = (int *)mlx_get_data_addr(img->img_ptr, &bpp, &size_line, &endian);
+	mlx->img_ptr = mlx_new_image(mlx->mlx_ptr, mlx->width, mlx->height);
+	img_data = (int *)mlx_get_data_addr(mlx->img_ptr, &bpp, &size_line, &endian);
 	i = 0;
-	while (i < win->height)
+	while (i < mlx->height)
 	{
 		int j = 0;
-		while (j < win->width)
+		while (j < mlx->width)
 		{
 
-			img_data[i * win->width + j] = 0x90EE90;
+			img_data[i * mlx->width + j] = 0x90EE90;
 
 			j++;
 		}
 		i++;
 	}
-	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, img->img_ptr, 0, 0);
+	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img_ptr, 0, 0);
 }

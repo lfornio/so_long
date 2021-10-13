@@ -6,7 +6,7 @@
 /*   By: lfornio <lfornio@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/24 10:31:47 by lfornio           #+#    #+#             */
-/*   Updated: 2021/10/13 13:26:57 by lfornio          ###   ########.fr       */
+/*   Updated: 2021/10/13 15:59:02 by lfornio          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,19 +82,19 @@ int walls_perimeter(char **tab, int count) //функция проверяет �
 	return (0);
 }
 
-void init_images(void *mlx_ptr, t_images *img) // инициализация картинок
+void init_images(void *mlx_ptr, t_mlx *mlx) // инициализация картинок
 {
 	int width;
 	int height;
 
-	img->img_ptr_wall = mlx_xpm_file_to_image(mlx_ptr, "images/wall.xpm", &width, &height);
+	mlx->img_ptr_wall = mlx_xpm_file_to_image(mlx_ptr, "images/wall.xpm", &width, &height);
 	// img->img_ptr_zone = mlx_xpm_file_to_image(mlx_ptr, "images/free_zone.xpm", &width, &height);
-	img->img_ptr_player = mlx_xpm_file_to_image(mlx_ptr, "images/player.xpm", &width, &height);
-	img->img_ptr_cake = mlx_xpm_file_to_image(mlx_ptr, "images/cake.xpm", &width, &height);
-	img->img_ptr_exit = mlx_xpm_file_to_image(mlx_ptr, "images/exit.xpm", &width, &height);
+	mlx->img_ptr_player = mlx_xpm_file_to_image(mlx_ptr, "images/player.xpm", &width, &height);
+	mlx->img_ptr_cake = mlx_xpm_file_to_image(mlx_ptr, "images/cake.xpm", &width, &height);
+	mlx->img_ptr_exit = mlx_xpm_file_to_image(mlx_ptr, "images/exit.xpm", &width, &height);
 }
 
-void map_print_img(void *mlx_ptr, void *win_ptr, t_images *img, char **tab) //печать карты в окне
+void map_print_img(void *mlx_ptr, void *win_ptr, t_mlx *mlx, char **tab) //печать карты в окне
 {
 	int i = 0;
 	int j = 0;
@@ -107,7 +107,7 @@ void map_print_img(void *mlx_ptr, void *win_ptr, t_images *img, char **tab) //п
 		while (tab[i][j])
 		{
 			if (tab[i][j] == '1')
-				mlx_put_image_to_window(mlx_ptr, win_ptr, img->img_ptr_wall, x, y);
+				mlx_put_image_to_window(mlx_ptr, win_ptr, mlx->img_ptr_wall, x, y);
 			// else
 			// 	mlx_put_image_to_window(mlx_ptr, win_ptr, img->img_ptr_zone, x, y);
 			x += 75;
@@ -125,11 +125,11 @@ void map_print_img(void *mlx_ptr, void *win_ptr, t_images *img, char **tab) //п
 		while (tab[i][j])
 		{
 			if (tab[i][j] == 'P')
-				mlx_put_image_to_window(mlx_ptr, win_ptr, img->img_ptr_player, x, y);
+				mlx_put_image_to_window(mlx_ptr, win_ptr, mlx->img_ptr_player, x, y);
 			if (tab[i][j] == 'C')
-				mlx_put_image_to_window(mlx_ptr, win_ptr, img->img_ptr_cake, x, y);
+				mlx_put_image_to_window(mlx_ptr, win_ptr, mlx->img_ptr_cake, x, y);
 			if (tab[i][j] == 'E')
-				mlx_put_image_to_window(mlx_ptr, win_ptr, img->img_ptr_exit, x, y);
+				mlx_put_image_to_window(mlx_ptr, win_ptr, mlx->img_ptr_exit, x, y);
 
 			x += 75;
 			j++;
@@ -181,30 +181,76 @@ int error_elements(char **tab, int count)
 	return (i);
 }
 
+int pos_player(char *s)
+{
+	int x;
+	x = 0;
+	while (s[x])
+	{
+		if (s[x] == 'P')
+			break ;
+		x++;
+	}
+	printf("x = %d\n", x);
+	return (x);
+
+}
+
+int  step_right(int key, t_mlx *mlx)
+{
+	// printf("key = %d\n", key);
+	int x;
+	int y;
+	int i = 0;
+	while(mlx->tab[i])
+	{
+		x = pos_player(mlx->tab[i]);
+		if(x != (int)ft_strlen(mlx->tab[i]) && x != 0)
+			break ;
+		i++;
+	}
+	y = i;
+
+	// printf("x = %d, y = %d\n", x, y);
+i = 0;
+// int j = 0;
+	if(key == 2)
+	{
+		mlx->tab[y][x] = '0';
+		mlx->tab[y][x + 1] = 'P';
+		while(mlx->tab[i])
+		{
+			printf("%s\n",mlx->tab[i]);
+			i++;
+		}
+		map_print_img(mlx->mlx_ptr, mlx->win_ptr, mlx, mlx->tab);
+		mlx_hook(mlx->win_ptr, 2, 1L<<0, step_right, mlx);
+
+
+	}
+	return (0);
+
+}
+
 int main(int argc, char **argv)
 {
 	t_mlx *mlx;
 	mlx = (t_mlx *)malloc(sizeof(t_mlx));
-	t_size *win;
-	win = (t_size *)malloc(sizeof(t_size));
-	t_images *img;
-	img = (t_images *)malloc(sizeof(t_images));
-	char **tab;
-	int count;
 
 	if (argc == 2)
 	{
 		error_ber(argv[1]);
-		count = size_tab(argv[1]);
-		tab = new_tab(argv[1], count);
-		if (error_map(tab, count) != 0 || error_elements(tab, count) != 0)
+		mlx->count = size_tab(argv[1]);
+		mlx->tab = new_tab(argv[1], mlx->count);
+		if (error_map(mlx->tab, mlx->count) != 0 || error_elements(mlx->tab, mlx->count) != 0)
 			exit(0);
-		init_size_window(win, tab[0], count);
+		init_size_window(mlx, mlx->tab[0], mlx->count);
 		mlx->mlx_ptr = mlx_init();
-		mlx->win_ptr = mlx_new_window(mlx->mlx_ptr, win->width, win->height, "so_long");
-		print_background(img, mlx, win);
-		init_images(mlx->mlx_ptr, img);
-		map_print_img(mlx->mlx_ptr, mlx->win_ptr, img, tab);
+		mlx->win_ptr = mlx_new_window(mlx->mlx_ptr, mlx->width, mlx->height, "so_long");
+		print_background(mlx);
+		init_images(mlx->mlx_ptr, mlx);
+		map_print_img(mlx->mlx_ptr, mlx->win_ptr, mlx, mlx->tab);
+		mlx_hook(mlx->win_ptr, 2, 1L<<0, step_right, mlx);
 
 		mlx_loop(mlx->mlx_ptr);
 	}

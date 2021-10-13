@@ -6,7 +6,7 @@
 /*   By: lfornio <lfornio@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 14:46:08 by lfornio           #+#    #+#             */
-/*   Updated: 2021/10/13 13:20:47 by lfornio          ###   ########.fr       */
+/*   Updated: 2021/10/13 15:11:29 by lfornio          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,26 +20,20 @@
 #include <stdio.h>
 #include "libft/libft.h"
 
-typedef struct s_size
+typedef struct s_mlx
 {
 	int width;
 	int height;
-} t_size;
-
-typedef struct s_mlx
-{
 	void *mlx_ptr;
 	void *win_ptr;
-} t_mlx;
-
-typedef struct s_images
-{
 	void *img_ptr;
 	void *img_ptr_wall;
 	void *img_ptr_player;
 	void *img_ptr_cake;
 	void *img_ptr_exit;
-} t_images;
+	int count;
+	char **tab;
+} t_mlx;
 
 void error_ber(char *map);
 int size_tab(char *map);
@@ -48,8 +42,8 @@ int error_map(char **tab, int count);
 int box(char **tab);
 int walls_str(char *str);
 int walls_perimeter(char **tab, int count);
-void init_size_window(t_size *win, char *s, int count);
-void print_background(t_images *img, t_mlx *mlx, t_size *win);
+void init_size_window(t_mlx *mlx, char *s, int count);
+void print_background(t_mlx *mlx);
 
 
 
