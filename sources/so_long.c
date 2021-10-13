@@ -6,7 +6,7 @@
 /*   By: lfornio <lfornio@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/24 10:31:47 by lfornio           #+#    #+#             */
-/*   Updated: 2021/10/12 16:16:30 by lfornio          ###   ########.fr       */
+/*   Updated: 2021/10/13 13:26:57 by lfornio          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int walls_str(char *str) //функция которая проверяет ве
 	return (0);
 }
 
-int analysis_str(char *str, char c) //функция которая проверяет верхнюю и нижнюю стену
+int analysis_str(char *str, char c) //функция считает количество элементов и проверяет наличие других символов
 {
 	int i;
 
@@ -50,6 +50,11 @@ int analysis_str(char *str, char c) //функция которая провер
 	count = 0;
 	while (str[i])
 	{
+		if (str[i] != '1' && str[i] != '0' && str[i] != 'C' && str[i] != 'P' && str[i] != 'E')
+		{
+			printf("Error: Map is error, other characters\n");
+			exit(0);
+		}
 		if (str[i] == c)
 			count++;
 		i++;
@@ -77,19 +82,19 @@ int walls_perimeter(char **tab, int count) //функция проверяет �
 	return (0);
 }
 
-void init_images(void *mlx_ptr, t_images *img)
+void init_images(void *mlx_ptr, t_images *img) // инициализация картинок
 {
 	int width;
 	int height;
 
 	img->img_ptr_wall = mlx_xpm_file_to_image(mlx_ptr, "images/wall.xpm", &width, &height);
 	// img->img_ptr_zone = mlx_xpm_file_to_image(mlx_ptr, "images/free_zone.xpm", &width, &height);
-	img->img_ptr_cat = mlx_xpm_file_to_image(mlx_ptr, "images/player.xpm", &width, &height);
-	img->img_ptr_mouse = mlx_xpm_file_to_image(mlx_ptr, "images/cake.xpm", &width, &height);
+	img->img_ptr_player = mlx_xpm_file_to_image(mlx_ptr, "images/player.xpm", &width, &height);
+	img->img_ptr_cake = mlx_xpm_file_to_image(mlx_ptr, "images/cake.xpm", &width, &height);
 	img->img_ptr_exit = mlx_xpm_file_to_image(mlx_ptr, "images/exit.xpm", &width, &height);
 }
 
-void map_print_img(void *mlx_ptr, void *win_ptr, t_images *img, char **tab)
+void map_print_img(void *mlx_ptr, void *win_ptr, t_images *img, char **tab) //печать карты в окне
 {
 	int i = 0;
 	int j = 0;
@@ -120,9 +125,9 @@ void map_print_img(void *mlx_ptr, void *win_ptr, t_images *img, char **tab)
 		while (tab[i][j])
 		{
 			if (tab[i][j] == 'P')
-				mlx_put_image_to_window(mlx_ptr, win_ptr, img->img_ptr_cat, x, y);
+				mlx_put_image_to_window(mlx_ptr, win_ptr, img->img_ptr_player, x, y);
 			if (tab[i][j] == 'C')
-				mlx_put_image_to_window(mlx_ptr, win_ptr, img->img_ptr_mouse, x, y);
+				mlx_put_image_to_window(mlx_ptr, win_ptr, img->img_ptr_cake, x, y);
 			if (tab[i][j] == 'E')
 				mlx_put_image_to_window(mlx_ptr, win_ptr, img->img_ptr_exit, x, y);
 
@@ -134,45 +139,45 @@ void map_print_img(void *mlx_ptr, void *win_ptr, t_images *img, char **tab)
 	}
 }
 
-int error_str(char **tab, int count)
+int error_elements(char **tab, int count)
 {
 	int i = 0;
-	int cat = 0;
+	int player = 0;
 	int ex = 0;
-	int mouse = 0;
+	int cake = 0;
 	while (tab[i] && i < count)
 	{
-		cat = cat + analysis_str(tab[i], 'P');
+		player = player + analysis_str(tab[i], 'P');
 		ex = ex + analysis_str(tab[i], 'E');
-		mouse = mouse + analysis_str(tab[i], 'C');
+		cake = cake + analysis_str(tab[i], 'C');
 		i++;
 	}
 	i = 0;
-	if (cat > 1)
-		{
-			printf("Error: Lots of cats\n");
-			i++;
-		}
+	if (player > 1)
+	{
+		printf("Error: Lots of cats\n");
+		i++;
+	}
 	if (ex > 1)
-		{
-			printf("Error: Lots of exit\n");
-			i++;
-		}
-	if (mouse == 0) //проверки на игрока, монеты, выход
-		{
-			printf("Error: No collectibles\n");
-			i++;
-		}
-	if (cat == 0)
-		{
-			printf("Error: No player\n");
-			i++;
-		}
+	{
+		printf("Error: Lots of exit\n");
+		i++;
+	}
+	if (cake == 0) //проверки на игрока, монеты, выход
+	{
+		printf("Error: No collectibles\n");
+		i++;
+	}
+	if (player == 0)
+	{
+		printf("Error: No player\n");
+		i++;
+	}
 	if (ex == 0)
-		{
-			printf("Error: No exit\n");
-			i++;
-		}
+	{
+		printf("Error: No exit\n");
+		i++;
+	}
 	return (i);
 }
 
@@ -182,149 +187,27 @@ int main(int argc, char **argv)
 	mlx = (t_mlx *)malloc(sizeof(t_mlx));
 	t_size *win;
 	win = (t_size *)malloc(sizeof(t_size));
-
-	// void *mlx_ptr;
-	// void *win_ptr;
-
-	char *line;
-	int res;
-	char **tab = NULL;
+	t_images *img;
+	img = (t_images *)malloc(sizeof(t_images));
+	char **tab;
 	int count;
-
-	int i = 0;
 
 	if (argc == 2)
 	{
-		int fd;
-		int a;
-		a = ft_strlen(argv[1]) - 4;
-		char *s;
-		s = argv[1];
-		char *str;
-		str = (char *)malloc(sizeof(char *) * 5);
-		if (!str)
-			return (0);
-		i = 0;
-		while (s[a])
-		{
-			str[i] = s[a];
-			a++;
-			i++;
-		}
-		str[i] = '\0';
-		if (ft_strncmp(str, ".ber", 4) != 0)
-		{
-			printf("Error: The map is not .ber\n");
-			free(str);
+		error_ber(argv[1]);
+		count = size_tab(argv[1]);
+		tab = new_tab(argv[1], count);
+		if (error_map(tab, count) != 0 || error_elements(tab, count) != 0)
 			exit(0);
-		}
-		free(str);
-		fd = open(argv[1], O_RDONLY);
-		if (fd == -1)
-		{
-			perror("Error");
-			exit(0);
-		}
-		i = 0;
-		while ((res = get_next_line(fd, &line)) > 0)
-		{
+		init_size_window(win, tab[0], count);
+		mlx->mlx_ptr = mlx_init();
+		mlx->win_ptr = mlx_new_window(mlx->mlx_ptr, win->width, win->height, "so_long");
+		print_background(img, mlx, win);
+		init_images(mlx->mlx_ptr, img);
+		map_print_img(mlx->mlx_ptr, mlx->win_ptr, img, tab);
 
-			// printf("res = %d fd = %d str%d = %s\n", res, fd, i, line);
-			free(line);
-			i++;
-		}
-		free(line);
-		printf("i = %d\n", i);
-		close(fd);
-		count = i - 1;
-		fd = open(argv[1], O_RDONLY);
-		tab = (char **)malloc(sizeof(char *) * (count + 1));
-		if (!tab)
-			return (0);
-		i = 0;
-		while ((res = get_next_line(fd, &line)) > 0)
-		{
-
-			// printf("res = %d fd = %d str%d = %s\n", res, fd, i, line);
-			tab[i] = ft_substr(line, 0, ft_strlen(line));
-			// line;
-			printf("%s\n", tab[i]);
-			free(line);
-			i++;
-		}
-		free(line);
-		tab[i] = NULL;
-		close(fd);
-		printf("i = %d\n", i);
-
-		if (box(tab) == 1) //проверка на прямоугольник
-		{
-			write(1, "Error\n", 6);
-			printf("The field is not rectangular\n");
-			exit(0);
-		}
-		if (walls_perimeter(tab, count) == 1) //проверка на периметр
-		{
-			write(1, "Error\n", 6);
-			printf("The perimeter walls are open\n");
-			exit(0);
-		}
-		win->height = 75 * i;
-		win->width = 75 * ft_strlen(tab[0]);
-		printf("hei = %d\n", win->height);
-		printf("wid = %d\n", win->width);
-		if (error_str(tab, count) != 0)
-			exit(0);
+		mlx_loop(mlx->mlx_ptr);
 	}
 	else
-		write(1, "Error\n", 6);
-
-	mlx->mlx_ptr = mlx_init();
-
-	mlx->win_ptr = mlx_new_window(mlx->mlx_ptr, win->width, win->height, "so_long");
-
-	// img_data = (int *)mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
-	// while(i < 200)
-	// {
-	// 	int j = 0;
-	// 	while (j < 200)
-	// 	{
-	// 		if(j % 2)
-	// 			img_data[i * 200 + j] = 0xFFFFFF;
-	// 		else
-	// 			img_data[i * 200 + j] = 0xFF0000;
-	// 		j++;
-	// 	}
-	// 	i++;
-	// }
-	// mlx_put_image_to_window(mlx_ptr, win_ptr, img_ptr, 100, 100);
-	t_images *img;
-	int *img_data;
-	int bpp;
-	int size_line;
-	int endian;
-	img = (t_images *)malloc(sizeof(t_images));
-	img->img_ptr = mlx_new_image(mlx->mlx_ptr, win->width, win->height);
-	img_data = (int *)mlx_get_data_addr(img->img_ptr, &bpp, &size_line, &endian);
-	i = 0;
-	while(i < win->height)
-	{
-		int j = 0;
-		while (j < win->width)
-		{
-
-			img_data[i * win->width + j] = 0x90EE90;
-
-			j++;
-		}
-		i++;
-	}
-	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, img->img_ptr, 0, 0);
-
-
-
-	init_images(mlx->mlx_ptr, img);
-	map_print_img(mlx->mlx_ptr, mlx->win_ptr, img, tab);
-
-	mlx_loop(mlx->mlx_ptr);
+		printf("Error: Argument error\n");
 }

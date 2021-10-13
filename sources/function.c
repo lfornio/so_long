@@ -6,7 +6,7 @@
 /*   By: lfornio <lfornio@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 15:17:47 by lfornio           #+#    #+#             */
-/*   Updated: 2021/10/12 16:15:39 by lfornio          ###   ########.fr       */
+/*   Updated: 2021/10/13 13:28:45 by lfornio          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,16 @@ void error_ber(char *map) //функция пррверяет расширени
 	free(str);
 }
 
-int size_tab(char *file)
+int size_tab(char *map)
 {
 	int fd;
 	int count;
 	char *line;
 
+	line = NULL;
+
 	count = 0;
-	fd = open(file, O_RDONLY);
+	fd = open(map, O_RDONLY);
 	if (fd == -1)
 	{
 		perror("Error");
@@ -54,37 +56,98 @@ int size_tab(char *file)
 	}
 	while ((get_next_line(fd, &line)) > 0)
 	{
+		if (ft_strlen(line) == 0)
+		{
+			printf("Error : Map is error, empty lines\n");
+			exit(0);
+		}
+
 		free(line);
 		count++;
 	}
 	free(line);
 	close(fd);
-	printf("count2 = %d\n", count);
+	// printf("size = %d\n", count);
 	return (count);
 }
 
-// char **new_tab(char *file, int count)
-// {
-// 	char **tab;
-// 	char *line;
-// 	int fd;
-// 	int i;
+char **new_tab(char *map, int count)
+{
+	char **tab;
+	char *line;
+	int fd;
+	int i;
 
-// 	i = 0;
-// 	fd = open(file, O_RDONLY);
-// 	tab = (char **)malloc(sizeof(char *) * (count + 1));
-// 	if (!tab)
-// 		return (NULL);
-// 	while ((get_next_line(fd, &line)) > 0)
-// 	{
-// 		tab[i] = ft_substr(line, 0, ft_strlen(line));
-// 		printf("%s\n", tab[i]);
-// 		free(line);
-// 		i++;
-// 	}
-// 	free(line);
-// 	tab[i] = NULL;
-// 	close(fd);
-// 	// printf("aaaa\n");
-// 	return (tab);
-// }
+	i = 0;
+	fd = open(map, O_RDONLY);
+	tab = (char **)malloc(sizeof(char *) * (count + 1));
+	if (!tab)
+		return (NULL);
+	while ((get_next_line(fd, &line)) > 0)
+	{
+		tab[i] = ft_substr(line, 0, ft_strlen(line));
+		// printf("%s\n", tab[i]);
+		free(line);
+		i++;
+	}
+	free(line);
+	tab[i] = NULL;
+	close(fd);
+	// printf("aaaa\n");
+	return (tab);
+}
+
+int error_map(char **tab, int count)
+{
+	int flag;
+
+	flag = 0;
+	if (box(tab) == 1) //проверка на прямоугольник
+	{
+		printf("Error: The field is not rectangular\n");
+		flag++;
+	}
+	if (walls_perimeter(tab, count - 1) == 1) //проверка на периметр
+	{
+		printf("Error: The perimeter walls are open\n");
+		flag++;
+	}
+	if (ft_strlen(tab[0]) > 34 || count > 19)
+	{
+		printf("Error: Map is very big\n");
+		flag++;
+	}
+	return (flag);
+}
+
+void init_size_window(t_size *win, char *s, int count)
+{
+	win->height = 75 * count;
+	win->width = 75 * ft_strlen(s);
+}
+
+void print_background(t_images *img, t_mlx *mlx, t_size *win)
+{
+	int *img_data;
+	int bpp;
+	int size_line;
+	int endian;
+	int i;
+
+	img->img_ptr = mlx_new_image(mlx->mlx_ptr, win->width, win->height);
+	img_data = (int *)mlx_get_data_addr(img->img_ptr, &bpp, &size_line, &endian);
+	i = 0;
+	while (i < win->height)
+	{
+		int j = 0;
+		while (j < win->width)
+		{
+
+			img_data[i * win->width + j] = 0x90EE90;
+
+			j++;
+		}
+		i++;
+	}
+	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, img->img_ptr, 0, 0);
+}

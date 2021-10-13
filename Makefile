@@ -18,6 +18,10 @@ ${NAME}: $(OBJS) $(INCLUDE)
 
 all : libft $(NAME)
 
+debug: $(SRCS) $(INCLUDE)
+	$(MAKE) -C ./libft
+	$(CC) $(FLAGS) -g $(SRCS) $(LIBFT_A) -lmlx -framework OpenGL -framework AppKit -o debug
+
 clean :
 	make -C libft clean
 	rm -f $(OBJS)
