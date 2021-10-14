@@ -6,7 +6,7 @@
 /*   By: lfornio <lfornio@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 14:46:08 by lfornio           #+#    #+#             */
-/*   Updated: 2021/10/13 15:11:29 by lfornio          ###   ########.fr       */
+/*   Updated: 2021/10/14 15:28:45 by lfornio          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,9 @@ typedef struct s_mlx
 	void *img_ptr_player;
 	void *img_ptr_cake;
 	void *img_ptr_exit;
+	void *img_ptr_exit_f;
 	int count;
+	int cake;
 	char **tab;
 } t_mlx;
 
@@ -44,6 +46,8 @@ int walls_str(char *str);
 int walls_perimeter(char **tab, int count);
 void init_size_window(t_mlx *mlx, char *s, int count);
 void print_background(t_mlx *mlx);
+int step_in_exit(int y, int x, t_mlx *mlx);
+void map_print_img(void *mlx_ptr, void *win_ptr, t_mlx *mlx, char **tab);
 
 
 

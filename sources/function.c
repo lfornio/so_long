@@ -6,7 +6,7 @@
 /*   By: lfornio <lfornio@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 15:17:47 by lfornio           #+#    #+#             */
-/*   Updated: 2021/10/13 15:05:27 by lfornio          ###   ########.fr       */
+/*   Updated: 2021/10/14 16:06:04 by lfornio          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ void error_ber(char *map) //функция пррверяет расширени
 	str[i] = '\0';
 	if (ft_strncmp(str, ".ber", 4) != 0)
 	{
-		printf("Error: The map is not .ber\n");
+		write(1, "Error\n", 6);
+		printf("The map is not .ber\n");
 		free(str);
 		exit(0);
 	}
@@ -58,7 +59,8 @@ int size_tab(char *map)
 	{
 		if (ft_strlen(line) == 0)
 		{
-			printf("Error : Map is error, empty lines\n");
+			write(1, "Error\n", 6);
+			printf("Map is error, empty lines\n");
 			exit(0);
 		}
 
@@ -104,17 +106,26 @@ int error_map(char **tab, int count)
 	flag = 0;
 	if (box(tab) == 1) //проверка на прямоугольник
 	{
-		printf("Error: The field is not rectangular\n");
+		write(1, "Error\n", 6);
+		printf("The field is not rectangular\n");
 		flag++;
 	}
 	if (walls_perimeter(tab, count - 1) == 1) //проверка на периметр
 	{
-		printf("Error: The perimeter walls are open\n");
+		write(1, "Error\n", 6);
+		printf("The perimeter walls are open\n");
 		flag++;
 	}
 	if (ft_strlen(tab[0]) > 34 || count > 19)
 	{
-		printf("Error: Map is very big\n");
+		write(1, "Error\n", 6);
+		printf("Map is very big\n");
+		flag++;
+	}
+	if (ft_strlen(tab[0]) < 4 || count < 4)
+	{
+		write(1, "Error\n", 6);
+		printf("Map is very small\n");
 		flag++;
 	}
 	return (flag);
@@ -142,12 +153,22 @@ void print_background(t_mlx *mlx)
 		int j = 0;
 		while (j < mlx->width)
 		{
-
 			img_data[i * mlx->width + j] = 0x90EE90;
-
 			j++;
 		}
 		i++;
 	}
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img_ptr, 0, 0);
+}
+
+int step_in_exit(int y, int x, t_mlx *mlx)
+{
+	int i;
+	i = 0;
+	mlx->tab[y][x] = '0';
+	i++;
+	mlx_destroy_image(mlx->mlx_ptr, mlx->img_ptr);
+	print_background(mlx);
+	map_print_img(mlx->mlx_ptr, mlx->win_ptr, mlx, mlx->tab);
+	return (i);
 }
