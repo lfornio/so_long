@@ -1,6 +1,11 @@
 NAME		= 	so_long
 SRCS		= 	sources/so_long.c \
-				sources/function.c \
+				sources/function_0.c \
+				sources/function_1.c \
+				sources/function_2.c \
+				sources/function_3.c \
+				sources/function_4.c \
+				sources/function_5.c \
 				get_next_line/get_next_line.c \
 				get_next_line/get_next_line_utils.c
 CC 			= 	gcc
