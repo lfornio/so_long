@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   so_long.h                                          :+:      :+:    :+:   */
+/*   so_long_bonus.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfornio <lfornio@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 14:46:08 by lfornio           #+#    #+#             */
-/*   Updated: 2021/10/19 08:00:14 by lfornio          ###   ########.fr       */
+/*   Updated: 2021/10/19 15:27:47 by lfornio          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SO_LONG_H
-# define SO_LONG_H
+#ifndef SO_LONG_BONUS_H
+# define SO_LONG_BONUS_H
 
 # include <mlx.h>
 # include <unistd.h>
@@ -26,8 +26,11 @@ typedef struct s_pos
 	int	y;
 	int	x_ex;
 	int	y_ex;
+	// int	x_enemy;
+	// int	y_enemy;
 	int	cake;
 	int	steps;
+	// char *str;
 }	t_pos;
 
 typedef struct s_mlx
@@ -42,6 +45,8 @@ typedef struct s_mlx
 	void	*img_ptr_cake;
 	void	*img_ptr_exit;
 	void	*img_ptr_exit_f;
+	void	*img_ptr_enemy;
+	void	*img_ptr_enemy_1;
 	int		count;
 	int		cake;
 	char	**tab;
@@ -85,5 +90,10 @@ void	print_key(char c, t_mlx *mlx, int x, int y);
 int		analysis_str(char *str, char c);
 int		pos_player_x(char **tab, char c);
 int		pos_player_y(char **tab, char c);
+void	init_images(void *mlx_ptr, t_mlx *mlx);
+char *init_str(t_mlx *mlx);
+int  animation(t_mlx *mlx);
+void	print_key_2(char c, t_mlx *mlx, int x, int y);
+void map_print_img_2(t_mlx *mlx, char **tab);
 
 #endif

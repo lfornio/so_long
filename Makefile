@@ -8,10 +8,21 @@ SRCS		= 	sources/so_long.c \
 				sources/function_5.c \
 				get_next_line/get_next_line.c \
 				get_next_line/get_next_line_utils.c
+SRCS_BONUS	= 	sources_bonus/so_long_bonus.c \
+				sources_bonus/function_b_0.c \
+				sources_bonus/function_b_1.c \
+				sources_bonus/function_b_2.c \
+				sources_bonus/function_b_3.c \
+				sources_bonus/function_b_4.c \
+				sources_bonus/function_b_5.c \
+				get_next_line/get_next_line.c \
+				get_next_line/get_next_line_utils.c
 CC 			= 	gcc
 FLAGS		=	-Wall -Wextra -Werror
 INCLUDES	=	so_long.h
+INCLUDES_B	=	so_long_bonus.h
 OBJS		=	$(SRCS:.c=.o)
+OBJS_BONUS	=	$(SRCS_BONUS:.c=.o)
 LIBFT_A		=   libft/libft.a
 
 .c.o: $(INCLUDE)
@@ -20,6 +31,10 @@ LIBFT_A		=   libft/libft.a
 ${NAME}: $(OBJS) $(INCLUDE)
 	$(MAKE) -C ./libft
 	$(CC) $(FLAGS) $(OBJS) $(LIBFT_A) -lmlx -framework OpenGL -framework AppKit -o $(NAME)
+
+bonus: $(OBJS_BONUS) $(INCLUDE_B)
+	$(MAKE) -C ./libft
+	$(CC) $(FLAGS) $(OBJS_BONUS) $(LIBFT_A) -lmlx -framework OpenGL -framework AppKit -o $(NAME)
 
 all : libft $(NAME)
 
@@ -30,6 +45,7 @@ debug: $(SRCS) $(INCLUDE)
 clean :
 	make -C libft clean
 	rm -f $(OBJS)
+	rm -f $(OBJS_BONUS)
 
 
 fclean : clean
