@@ -6,7 +6,7 @@
 /*   By: lfornio <lfornio@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 11:02:01 by lfornio           #+#    #+#             */
-/*   Updated: 2021/10/19 09:41:14 by lfornio          ###   ########.fr       */
+/*   Updated: 2021/10/20 10:38:55 by lfornio          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 int	step_count(t_mlx *mlx, int j, int i)
 {
 	if (mlx->tab[j][i] == 'Z')
-			{
-				printf("YOU LOST\n");
-				exit(0);
-			}
+	{
+		printf("YOU LOST\n");
+		exit(0);
+	}
 	if (mlx->tab[j][i] == '1')
-				return(0);
+		return (0);
 	if (element_count(mlx, 'E') == 1)
 	{
 		if (mlx->tab[j][i] == 'E'

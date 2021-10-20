@@ -15,6 +15,7 @@ SRCS_BONUS	= 	sources_bonus/so_long_bonus.c \
 				sources_bonus/function_b_3.c \
 				sources_bonus/function_b_4.c \
 				sources_bonus/function_b_5.c \
+				sources_bonus/function_b_6.c \
 				get_next_line/get_next_line.c \
 				get_next_line/get_next_line_utils.c
 CC 			= 	gcc

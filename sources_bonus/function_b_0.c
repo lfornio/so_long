@@ -6,7 +6,7 @@
 /*   By: lfornio <lfornio@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 15:17:47 by lfornio           #+#    #+#             */
-/*   Updated: 2021/10/19 08:13:47 by lfornio          ###   ########.fr       */
+/*   Updated: 2021/10/20 07:38:14 by lfornio          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ char	**new_tab(char *map, int count)
 
 void	init_size_window(t_mlx *mlx, char *s, int count)
 {
-	mlx->height = 75 * count;
+	mlx->height = 75 * count + 25;
 	mlx->width = 75 * ft_strlen(s);
 }
 

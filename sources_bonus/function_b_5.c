@@ -6,7 +6,7 @@
 /*   By: lfornio <lfornio@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 13:41:31 by lfornio           #+#    #+#             */
-/*   Updated: 2021/10/19 13:31:17 by lfornio          ###   ########.fr       */
+/*   Updated: 2021/10/20 10:39:49 by lfornio          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,13 @@ void	print_background(t_mlx *mlx)
 	int		*img_data;
 	int		i;
 	int		j;
+	char	*s;
 
 	i = 0;
-	mlx->img_ptr = mlx_new_image(mlx->mlx_ptr, mlx->width, mlx->height + 25);
+	mlx->img_ptr = mlx_new_image(mlx->mlx_ptr, mlx->width, mlx->height);
 	img_data = (int *)mlx_get_data_addr(mlx->img_ptr, &f.bpp,
 			&f.size_line, &f.endian);
-	while (i < mlx->height + 25)
+	while (i < mlx->height)
 	{
 		j = 0;
 		while (j < mlx->width)
@@ -91,8 +92,30 @@ void	print_background(t_mlx *mlx)
 		i++;
 	}
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img_ptr, 0, 0);
-	char *s;
 	s = init_str(mlx);
-	mlx_string_put(mlx->mlx_ptr, mlx->win_ptr, 10, mlx->height, 0x1E90FF, s);
+	mlx_string_put(mlx->mlx_ptr, mlx->win_ptr, 10,
+		mlx->height - 25, 0x1E90FF, s);
 	free(s);
+}
+
+char	*init_str(t_mlx *mlx)
+{
+	char	*s;
+	char	*str;
+
+	s = ft_itoa(mlx->p.steps);
+	str = ft_strjoin("Steps: ", s);
+	free(s);
+	return (str);
+}
+
+t_mlx	*init_struct(t_mlx *mlx)
+{
+	mlx->p.x = 0;
+	mlx->p.y = 0;
+	mlx->p.x_ex = 0;
+	mlx->p.y_ex = 0;
+	mlx->p.cake = 0;
+	mlx->p.steps = 0;
+	return (mlx);
 }

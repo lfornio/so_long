@@ -6,7 +6,7 @@
 /*   By: lfornio <lfornio@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 14:46:08 by lfornio           #+#    #+#             */
-/*   Updated: 2021/10/19 15:27:47 by lfornio          ###   ########.fr       */
+/*   Updated: 2021/10/20 10:40:27 by lfornio          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,8 @@ typedef struct s_pos
 	int	y;
 	int	x_ex;
 	int	y_ex;
-	// int	x_enemy;
-	// int	y_enemy;
 	int	cake;
 	int	steps;
-	// char *str;
 }	t_pos;
 
 typedef struct s_mlx
@@ -91,9 +88,10 @@ int		analysis_str(char *str, char c);
 int		pos_player_x(char **tab, char c);
 int		pos_player_y(char **tab, char c);
 void	init_images(void *mlx_ptr, t_mlx *mlx);
-char *init_str(t_mlx *mlx);
-int  animation(t_mlx *mlx);
+char	*init_str(t_mlx *mlx);
+t_mlx	*init_struct(t_mlx *mlx);
+int		animation(t_mlx *mlx);
 void	print_key_2(char c, t_mlx *mlx, int x, int y);
-void map_print_img_2(t_mlx *mlx, char **tab);
+void	map_print_img_2(t_mlx *mlx, char **tab);
 
 #endif

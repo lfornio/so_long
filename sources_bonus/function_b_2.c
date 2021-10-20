@@ -6,7 +6,7 @@
 /*   By: lfornio <lfornio@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 13:32:38 by lfornio           #+#    #+#             */
-/*   Updated: 2021/10/19 15:27:49 by lfornio          ###   ########.fr       */
+/*   Updated: 2021/10/20 10:05:15 by lfornio          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,8 @@ void	print_key(char c, t_mlx *mlx, int x, int y)
 		mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr,
 			mlx->img_ptr_exit_f, x, y);
 	else if (c == 'Z')
-	{
-		// mlx->p.x_enemy =pos_player_x(mlx->tab, 'Z') * 75;
-		// mlx->p.y_enemy =pos_player_y(mlx->tab, 'Z') * 75;
-
-
-		mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img_ptr_enemy, x, y);
-}
+		mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr,
+			mlx->img_ptr_enemy, x, y);
 }
 
 int	step_in_exit(t_mlx *mlx)
